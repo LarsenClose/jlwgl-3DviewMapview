@@ -26,7 +26,7 @@ public class Colors {
       colors.add( new Triple( 0.5, 0, 1 ) );  
       colors.add( new Triple( 0, 0.5, 1 ) );  
 
-      colors.add( new Triple( 0.9, 1.0, 0.9 ) );  // 12= pale green
+      colors.add( new Triple( .51, 1.0, 0.92 ) );  // 12= pale green
 
       return colors;
    }

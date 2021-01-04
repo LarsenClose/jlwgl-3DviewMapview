@@ -161,7 +161,7 @@ public class Ch7 extends Basic {
                camera.move( -1, 0, 0 );
             }
             else if ( code == GLFW_KEY_RIGHT ) {  // strafe left relative to body orientation
-               camera.move( 1,w 0, 0 );
+               camera.move( 1, 0, 0 );
             }
             else if ( code == GLFW_KEY_UP ) { // forward
                camera.move( 0, 1, 0 );
