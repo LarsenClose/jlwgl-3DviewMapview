@@ -9,6 +9,8 @@ public class Triple {
       x = a;  y = b;  z = c;
    }
 
+ 
+
    public Triple( Scanner input ) {
       x = input.nextDouble();  
       y = input.nextDouble();  
@@ -57,6 +59,7 @@ public class Triple {
    }
 
    public final static Triple up = new Triple( 0, 0, 1 );
+
 
    public static void main(String[] args) {
       Triple e = new Triple( 18, 20, 7 ), 

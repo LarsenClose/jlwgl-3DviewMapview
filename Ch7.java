@@ -21,6 +21,9 @@ public class Ch7 extends Basic {
 
    private final static int MAX = 1000;
 
+   public final static int width = 1000;
+   public final static int height = 500;
+
    public static void main(String[] args) {
       if ( args.length != 1 ) {
          System.out.println("Usage:  j Ch7 <input file name>");
@@ -43,7 +46,7 @@ public class Ch7 extends Basic {
    private int positionHandle, colorHandle;
    private FloatBuffer positionBuffer, colorBuffer;
 
-   private Camera camera;
+   private Camera camera, mapView;
 
    // construct basic application with given title, pixel width and height
    // of drawing area, and frames per second
@@ -54,6 +57,8 @@ public class Ch7 extends Basic {
       try {
          Scanner input = new Scanner( new File( fileName ) );
 
+
+         mapView = new Camera(new Triple(75,25,100), 90, -89, 2);
          camera = new Camera( input );
          
          blocks = new ArrayList<Block>();
@@ -147,53 +152,64 @@ public class Ch7 extends Basic {
  
             if ( code == GLFW_KEY_A ) { // look left
                camera.turn( 3 );
+               mapView.turn( 3 );
             }
             else if ( code == GLFW_KEY_D ) { // look right
                camera.turn( -3 );
+               mapView.turn( -3 );
             }
             else if ( code == GLFW_KEY_Q ) { // pan vision down
                camera.tilt( -3 );
+               mapView.tilt( -3 );
             }
             else if ( code == GLFW_KEY_E ) { // pan vision up
                camera.tilt( 3 );
+               mapView.tilt( 3 );
             }
             else if ( code == GLFW_KEY_LEFT ) { // strafe left relative to body orientation
                camera.move( -1, 0, 0 );
+               mapView.move( -1, 0, 0 );
             }
             else if ( code == GLFW_KEY_RIGHT ) {  // strafe left relative to body orientation
                camera.move( 1, 0, 0 );
+               mapView.move( 1, 0, 0 );
             }
             else if ( code == GLFW_KEY_UP ) { // forward
                camera.move( 0, 1, 0 );
+               mapView.move( 0, 1, 0 );
             }
             else if ( code == GLFW_KEY_DOWN ) { // backward
                camera.move( 0, -1, 0 );
+               mapView.move( 0, -1, 0 );
             }
             else if ( code == GLFW_KEY_W ) { // up
                camera.move( 0, 0, 1 );
+               mapView.move( 0, 0, 1 );
             }
             else if ( code == GLFW_KEY_S ) { // down
                camera.move( 0, 0, -1 );
+               mapView.move( 0, 0, -1 );
             }
+            else if ( code == GLFW_KEY_R ) { // down
 
-
+            }
          }// input event is a key
  
          else if ( info.kind == 'm' ) {// mouse moved
-            //  System.out.println( info );
+             System.out.println( info );
          }
  
          else if( info.kind == 'b' ) {// button action
-            //  System.out.println( info );
+             System.out.println( info );
+             System.out.println( "camera " + camera.toString());
+             System.out.println( "map " + mapView.toString());
          }
  
       }// loop to process all input events
  
    }
  
-   protected void update() {
-   }
- 
+
    // hide retina display issue from ourselves
    private void setViewport( int left, int bottom, int width, int height ) {
       //   Note:  the Util.retinaDisplay constant adjusts for
@@ -208,20 +224,39 @@ public class Ch7 extends Basic {
 
       // System.out.println( getStepNumber() );
 
-      sendData();
 
-      camera.update( hp1 );  // updates and sends frustum and lookAt
-      setViewport( 0, 0, 500, 500 );
-      GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
-            Util.error("after draw arrays");
- 
-/*    // map view
-      setViewport( 500, 0, 500, 500 );
-      GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
-            Util.error("after draw arrays");
-*/
+      sendData();
+      map();
+      update();
+
+
 
    }
+
+   protected void update() {
+      camera.update( hp1 );  // updates and sends frustum and lookAt
+
+      setViewport( 0, 0, 250, 250 );
+      GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
+            Util.error("after draw arrays");
+
+   }
+
+   protected void map() {
+      mapView.map(hp1);
+
+      setViewport( 250, 0, 250, 250 );
+      GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
+         Util.error("after draw arrays");
+   }
+    
+   // protected void mapIt() {
+   // map view
+   // camera.map();
+   // setViewport( 500, 0, 250, 500 );
+   // GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
+         // Util.error("after draw arrays");
+   // }
  
    private void sendData() {
  

@@ -58,6 +58,15 @@ public class Mat4 {
                        0, 0, - (f+n)/(f-n), - (2*f*n)/(f-n),
                        0, 0, -1, 0 ); 
    }  
+
+      public static Mat4 parralelProj( double l, double r,
+                               double b, double t,
+                               double n, double f ) {
+      return new Mat4( 2/(r-l), 0, 0, -(r+l)/(r-l),
+                       0, 2/(t-b), 0, -(t+b)/(t-b),
+                       0, 0, - 2/(f-n), - (f+n)/(f-n),
+                       0, 0, 0, 1 ); 
+   }  
                
    public static Mat4 lookAt( Triple e, Triple c, Triple up ) {
       Triple n = c.minus(e);

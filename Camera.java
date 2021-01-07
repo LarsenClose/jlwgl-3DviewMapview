@@ -10,10 +10,10 @@ import org.lwjgl.opengl.*;
 
 public class Camera {
 
-   private Triple e, c; 
-   private double azi;  // rotation of camera in x-y plane
-   private double alt;  // rotation of camera from x-y plane
-   private double near;  // distance from e to c
+   private Triple e, c, eN; 
+   private double azi, aziN;  // rotation of camera in x-y plane
+   private double alt, altN;  // rotation of camera from x-y plane
+   private double near, nearN;  // distance from e to c
 
    private Mat4 frustum, lookAt;
    private int frustumLoc, lookAtLoc;  // handles to uniform variables
@@ -84,6 +84,38 @@ public class Camera {
       e = new Triple( e.x + dx, e.y + dy, e.z + dz );
       compute( e, azi, alt, near );
    }
+
+   public void map( int hp1 ) {
+      // eN = new Triple( 50, 50, 250 );
+      // aziN = 90;
+      // altN = -89;
+      // nearN = 1;
+
+      // compute( eN, aziN, altN, nearN );
+      // Camera.update( hp1);
+      // gluLookAt(0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+            // set up handles to uniform variables
+            frustumLoc = GL20.glGetUniformLocation( hp1, "frustum" );
+            lookAtLoc = GL20.glGetUniformLocation( hp1, "lookAt" );
+      
+            // create the matrices
+            frustum = Mat4.parralelProj( -1, 1, -1, 1, near, 1000*near );
+            lookAt = Mat4.lookAt( e, c, Triple.up );
+      
+            // create buffer versions of the matrices
+            frustum.toBuffer( frustumBuffer );
+            lookAt.toBuffer( lookAtBuffer );
+      
+            // sends data for uniforms to GPU
+            GL20.glUniformMatrix4fv( frustumLoc, true, frustumBuffer );
+            GL20.glUniformMatrix4fv( lookAtLoc, true, lookAtBuffer );
+   }
+
+   public void info(  ) {
+       System.out.println("e is " + e + "azi is " + azi + "alt is " + alt + "near is " + near); 
+   }
+
 
    // given camera data azi, alt, d, e, c
    // update frustum and lookAt and send uniform
