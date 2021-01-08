@@ -85,7 +85,7 @@ public class Camera {
       compute( e, azi, alt, near );
    }
 
-   public void map( int hp1 ) {
+   public void mapUpdate( int hp1 ) {
       // eN = new Triple( 50, 50, 250 );
       // aziN = 90;
       // altN = -89;
@@ -100,7 +100,7 @@ public class Camera {
             lookAtLoc = GL20.glGetUniformLocation( hp1, "lookAt" );
       
             // create the matrices
-            frustum = Mat4.parralelProj( -1, 1, -1, 1, near, 1000*near );
+            frustum = Mat4.frustum( -1, 1, -1, 1, near, 1000*near );
             lookAt = Mat4.lookAt( e, c, Triple.up );
       
             // create buffer versions of the matrices

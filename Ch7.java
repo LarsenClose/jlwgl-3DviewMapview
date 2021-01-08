@@ -58,7 +58,7 @@ public class Ch7 extends Basic {
          Scanner input = new Scanner( new File( fileName ) );
 
 
-         mapView = new Camera(new Triple(75,25,100), 90, -89, 2);
+         mapView = new Camera(new Triple(50,50,100), 0, -90.00001, 2);
          camera = new Camera( input );
          
          blocks = new ArrayList<Block>();
@@ -196,13 +196,17 @@ public class Ch7 extends Basic {
          }// input event is a key
  
          else if ( info.kind == 'm' ) {// mouse moved
-             System.out.println( info );
+            //  System.out.println( info );
          }
  
          else if( info.kind == 'b' ) {// button action
              System.out.println( info );
-             System.out.println( "camera " + camera.toString());
-             System.out.println( "map " + mapView.toString());
+             System.out.println( " updates info " );
+             camera.update( hp1 );
+             camera.info();
+
+             mapView.mapUpdate(hp1);
+             mapView.info();
          }
  
       }// loop to process all input events
@@ -243,7 +247,7 @@ public class Ch7 extends Basic {
    }
 
    protected void map() {
-      mapView.map(hp1);
+      mapView.mapUpdate(hp1);
 
       setViewport( 250, 0, 250, 250 );
       GL11.glDrawArrays( GL11.GL_TRIANGLES, 0, Block.getNumVerts( blocks ) );
