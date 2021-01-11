@@ -149,46 +149,47 @@ public class Ch7 extends Basic {
          if ( info.kind == 'k' && (info.action == GLFW_PRESS || 
                                   info.action == GLFW_REPEAT) ) {
             int code = info.code;
+            boolean debug = false;
  
             if ( code == GLFW_KEY_A ) { // look left
                camera.turn( 3 );
-               mapView.turn( 3 );
+               if (debug) mapView.turn( 3 );
             }
             else if ( code == GLFW_KEY_D ) { // look right
                camera.turn( -3 );
-               mapView.turn( -3 );
+               if (debug) mapView.turn( -3 );
             }
             else if ( code == GLFW_KEY_Q ) { // pan vision down
                camera.tilt( -3 );
-               mapView.tilt( -3 );
+               if (debug) mapView.tilt( -3 );
             }
             else if ( code == GLFW_KEY_E ) { // pan vision up
                camera.tilt( 3 );
-               mapView.tilt( 3 );
+               if (debug) mapView.tilt( 3 );
             }
             else if ( code == GLFW_KEY_LEFT ) { // strafe left relative to body orientation
                camera.move( -1, 0, 0 );
-               mapView.move( -1, 0, 0 );
+               if (debug) mapView.move( -1, 0, 0 );
             }
             else if ( code == GLFW_KEY_RIGHT ) {  // strafe left relative to body orientation
                camera.move( 1, 0, 0 );
-               mapView.move( 1, 0, 0 );
+               if (debug) mapView.move( 1, 0, 0 );
             }
             else if ( code == GLFW_KEY_UP ) { // forward
                camera.move( 0, 1, 0 );
-               mapView.move( 0, 1, 0 );
+               if (debug) mapView.move( 0, 1, 0 );
             }
             else if ( code == GLFW_KEY_DOWN ) { // backward
                camera.move( 0, -1, 0 );
-               mapView.move( 0, -1, 0 );
+               if (debug) mapView.move( 0, -1, 0 );
             }
             else if ( code == GLFW_KEY_W ) { // up
                camera.move( 0, 0, 1 );
-               mapView.move( 0, 0, 1 );
+               if (debug) mapView.move( 0, 0, 1 );
             }
             else if ( code == GLFW_KEY_S ) { // down
                camera.move( 0, 0, -1 );
-               mapView.move( 0, 0, -1 );
+               if (debug) mapView.move( 0, 0, -1 );
             }
             else if ( code == GLFW_KEY_R ) { // down
 
