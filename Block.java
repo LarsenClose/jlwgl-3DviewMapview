@@ -17,6 +17,7 @@ public class Block {
    private String kind;
    private Triple[] verts; // all model vertices of the triangles
    private int[][] tris; // indices into verts of each triangle
+   public Mat4 matrix;
 
    // transformations:
    Mat4 scale, rotate, translate;
@@ -28,7 +29,7 @@ public class Block {
 
       if (kind.equals("groundBox") || kind.equals("clownBox") || kind.equals("groundBoxed")
             || kind.equals("sierpinskiBox") || kind.equals("pyraBox")) {
-         if (kind.equals("pyraBox")) {
+         if (kind.equals("pyraBox") || kind.equals("sierpinskiBox")) {
             // build the model vertices
             verts = new Triple[5];
             // x y z <=> 4 2 1
@@ -44,24 +45,9 @@ public class Block {
 
             };
          } // pyramid
-         if (kind.equals("sierpinskiBox")) {
-            // build the model vertices
-            verts = new Triple[5];
-            // x y z <=> 4 2 1
-            verts[0] = new Triple(-1, -1, 0);
-            verts[1] = new Triple(-1, 1, 0);
-            verts[2] = new Triple(1, -1, 0);
-            verts[3] = new Triple(1, 1, 0);
-            verts[4] = new Triple(0, 0, 1);
 
-            // build the triangles
-            tris = new int[][] { { 0, 1, 2 }, { 2, 3, 1 }, // bottom
-                  { 0, 1, 4 }, { 0, 2, 4 }, { 1, 3, 4 }, { 3, 2, 4 }, { 2, 3, 4 },
 
-            };
-         } // sierpinskiBox pyramid
-
-         else if (kind.equals("groundBox") || kind.equals("clownBox") || kind.equals("groundBoxed")) {
+         else if (kind.equals("groundBox") || kind.equals("clownBox")) {
 
             // build the model vertices
             verts = new Triple[8];
@@ -91,23 +77,7 @@ public class Block {
          System.exit(1);
       }
 
-      if (kind.equals("sierpinskiBox")) {
-               // get transformation data and build matrices
-      int iterations = input.nextInt();
-      input.nextLine();
-      for (int k = 0; k < iterations; k++) {
-            double sx = input.nextDouble(), sy = input.nextDouble(), sz = input.nextDouble();
-            input.nextLine();
-            scale = Mat4.scale(sx, sy, sz);
 
-
-            double tx = input.nextDouble(), ty = input.nextDouble(), tz = input.nextDouble();
-            input.nextLine();
-            translate = Mat4.translate(tx, ty, tz);
-
-      }
-   }
-      else{
 
 
       // get transformation data and build matrices
@@ -125,7 +95,17 @@ public class Block {
 
 
    }
-}
+
+   
+   // public sierpinski(Triple scale(int sx, int sy, int sz), Triple translate(tx,ty,tz)) {
+   //    double sx = scale.a, sy = input.nextDouble(), sz = input.nextDouble();
+
+   //    for (int i=0; i<5; i++){
+   //       Mat4 matrix translate.mult(rotate.mult(scale));
+   //    }
+   // }
+   
+
 
    // send the position and color data for all the
    // vertices in all the triangles
@@ -138,16 +118,16 @@ public class Block {
             v.sendData(positionBuffer);
             if (kind.equals("clownBox")) {
                Colors.sendData(k, colorBuffer);
-            } else if (kind.equals("pyraBox")) {
+            } else if (kind.equals("pyraBox"))  {
+               Colors.sendData(k + 12, colorBuffer);
+            } else if (kind.equals("sierpinskiBox"))  {
                Colors.sendData(k + 12, colorBuffer);
             } else if (kind.equals("groundBox")) {
                Colors.sendData(18, colorBuffer);
-            } else if (kind.equals("groundBoxed")) {
-               Colors.sendData(19, colorBuffer);
-            }
-
          }
       }
+   }
+      
 
    }
 
