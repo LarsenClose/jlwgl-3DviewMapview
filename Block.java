@@ -1,6 +1,6 @@
 import java.util.*;
 import java.nio.FloatBuffer;
-import java.lang.Math;
+
 
 public class Block {
 
@@ -20,6 +20,7 @@ public class Block {
    private int[][] tris; // indices into verts of each triangle
    public ArrayList<Mat4> matrices;
 
+
    // transformations:
    Mat4 scale, scaleHalf, rotate, translate, translateOne, translateTwo, translateTre, translateFour, translateFive;
 
@@ -28,8 +29,8 @@ public class Block {
       kind = input.next();
       input.nextLine();
 
-      if (kind.equals("groundBox") || kind.equals("clownBox") || kind.equals("sierpinskiBox")
-            || kind.equals("pyraBox")) {
+      if (kind.equals("groundBox") || kind.equals("clownBox") || kind.equals("groundBoxed")
+            || kind.equals("sierpinskiBox") || kind.equals("pyraBox")) {
          if (kind.equals("pyraBox") || kind.equals("sierpinskiBox")) {
             // build the model vertices
             verts = new Triple[5];
@@ -46,6 +47,7 @@ public class Block {
 
             };
          } // pyramid
+
 
          else if (kind.equals("groundBox") || kind.equals("clownBox")) {
 
@@ -77,105 +79,49 @@ public class Block {
          System.exit(1);
       }
 
-      if (kind.equals("sierpinskiBox")) {
+      // get transformation data and build matrices
+      double sx = input.nextDouble(), sy = input.nextDouble(), sz = input.nextDouble();
+      input.nextLine();
+      scale = Mat4.scale(sx, sy, sz);
 
-         double halfX = 0.5, halfY = 0.5, halfZ = 0.5;
-         scaleHalf = Mat4.scale(halfX, halfY, halfZ);
+      double theta = input.nextDouble(), ax = input.nextDouble(), ay = input.nextDouble(), az = input.nextDouble();
+      input.nextLine();
+      rotate = Mat4.rotate(theta, ax, ay, az);
 
-         double oneTx = 0.0, oneTy = 0.0, oneTz = 0.0;
-         double twoTx = 1, twoTy = 0.0, twoTz = 0.0;
-         double treTx = 1, treTy = 0.0, treTz = 1;
-         double fourTx = 0.0, fourTy = 0.0, fourTz = 1;
-         double fiveTx = 0.5, fiveTy = 1 / Math.sqrt(2), fiveTz = 0.5;
+      double tx = input.nextDouble(), ty = input.nextDouble(), tz = input.nextDouble();
+      input.nextLine();
+      translate = Mat4.translate(tx, ty, tz);
+            
 
-         translateOne = Mat4.translate(oneTx, oneTy, oneTz);
-         translateTwo = Mat4.translate(twoTx, twoTy, twoTz);
-         translateTre = Mat4.translate(treTx, treTy, treTz);
-         translateFour = Mat4.translate(fourTx, fourTy, fourTz);
-         translateFive = Mat4.translate(fiveTx, fiveTy, fiveTz);
-
-         matrices.add(translateOne.mult(scaleHalf));
-         matrices.add(translateTwo.mult(scaleHalf));
-         matrices.add(translateTre.mult(scaleHalf));
-         matrices.add(translateFour.mult(scaleHalf));
-         matrices.add(translateFive.mult(scaleHalf));
-
-      }
-
-      else if (kind.equals("groundBox") || kind.equals("clownBox")
-            || kind.equals("pyraBox")) {
-
-         // get transformation data and build matrices
-         double sx = input.nextDouble(), sy = input.nextDouble(), sz = input.nextDouble();
-         input.nextLine();
-         scale = Mat4.scale(sx, sy, sz);
-
-         double theta = input.nextDouble(), ax = input.nextDouble(), ay = input.nextDouble(), az = input.nextDouble();
-         input.nextLine();
-         rotate = Mat4.rotate(theta, ax, ay, az);
-
-         double tx = input.nextDouble(), ty = input.nextDouble(), tz = input.nextDouble();
-         input.nextLine();
-         translate = Mat4.translate(tx, ty, tz);
-      }
 
    }
 
-   // public sierpinski(Triple scale(int sx, int sy, int sz), Triple
-   // translate(tx,ty,tz)) {
-   // double sx = scale.a, sy = input.nextDouble(), sz = input.nextDouble();
 
-   // for (int i=0; i<5; i++){
-   // Mat4 matrix translate.mult(rotate.mult(scale));
-   // }
-   // }
 
    // send the position and color data for all the
    // vertices in all the triangles
    public void sendData(FloatBuffer positionBuffer, FloatBuffer colorBuffer) {
-      if (kind.equals("sierpinskiBox")) {
-         for (int i = 0; i < matrices.size(); i++) {
+      Mat4 matrix = translate.mult(rotate.mult(scale));
+      
 
-            Mat4 matrix = matrices.get(i);
-
-            for (int k = 0; k < tris.length; k++) {
-               for (int j = 0; j < 3; j++) {
-                  Vec4 v = matrix.mult(verts[tris[k][j]].toVec4());
-                  v.sendData(positionBuffer);
-
-                  if (kind.equals("sierpinskiBox")) {
-                     Colors.sendData(k + 12, colorBuffer);
-
-                  }
-               }
-            }
-
-         }
-
-      }
-
-      else if (kind.equals("groundBox") || kind.equals("clownBox")
-            || kind.equals("pyraBox")) {
-         Mat4 matrix = translate.mult(rotate.mult(scale));
-
-         for (int k = 0; k < tris.length; k++) {
-            for (int j = 0; j < 3; j++) {
-               Vec4 v = matrix.mult(verts[tris[k][j]].toVec4());
-               v.sendData(positionBuffer);
-               if (kind.equals("clownBox")) {
-                  Colors.sendData(k, colorBuffer);
-               } else if (kind.equals("pyraBox")) {
-                  Colors.sendData(k + 12, colorBuffer);
-               } else if (kind.equals("sierpinskiBox")) {
-                  Colors.sendData(k + 12, colorBuffer);
-               } else if (kind.equals("groundBox")) {
-                  Colors.sendData(19, colorBuffer);
-               }
+      for (int k = 0; k < tris.length; k++) {
+         for (int j = 0; j < 3; j++) {
+            Vec4 v = matrix.mult(verts[tris[k][j]].toVec4());
+            v.sendData(positionBuffer);
+            if (kind.equals("clownBox")) {
+               Colors.sendData(k, colorBuffer);
+            } else if (kind.equals("pyraBox"))  {
+               Colors.sendData(k + 12, colorBuffer);
+            } else if (kind.equals("sierpinskiBox"))  {
+               Colors.sendData(k + 12, colorBuffer);
+            } else if (kind.equals("groundBox")) {
+               Colors.sendData(19, colorBuffer);
             }
          }
       }
-
    }
+      
+
 
    public int numVerts() {
       return tris.length * 3;
