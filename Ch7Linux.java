@@ -17,12 +17,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 
-public class Ch7 extends Basic {
+public class Ch7Linux extends Basic {
 
    private final static int MAX = 1000;
 
-   public final static int width = 1000;
-   public final static int height = 500;
 
    public static void main(String[] args) {
       if (args.length != 1) {
@@ -30,7 +28,7 @@ public class Ch7 extends Basic {
          System.exit(1);
       }
 
-      Ch7 app = new Ch7("Chapter 7", 1000, 500, 30, args[0]);
+      Ch7Linux app = new Ch7Linux("Chapter 7", 1000, 500, 30, args[0]);
       app.start();
    }// main
 
@@ -50,7 +48,7 @@ public class Ch7 extends Basic {
 
    // construct basic application with given title, pixel width and height
    // of drawing area, and frames per second
-   public Ch7(String appTitle, int pw, int ph, int fps, String fileName) {
+   public Ch7Linux(String appTitle, int pw, int ph, int fps, String fileName) {
       super(appTitle, pw, ph, (long) ((1.0 / fps) * 1000000000));
 
       // read camera data and triangle data from data file with given name
