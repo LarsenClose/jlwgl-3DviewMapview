@@ -1,6 +1,7 @@
 import java.util.*;
 import java.nio.FloatBuffer;
 
+
 public class Block {
 
    // return total number of vertices in all the triangles
@@ -17,10 +18,11 @@ public class Block {
    private String kind;
    private Triple[] verts; // all model vertices of the triangles
    private int[][] tris; // indices into verts of each triangle
-   public Mat4 matrix;
+   public ArrayList<Mat4> matrices;
+
 
    // transformations:
-   Mat4 scale, rotate, translate;
+   Mat4 scale, scaleHalf, rotate, translate, translateOne, translateTwo, translateTre, translateFour, translateFive;
 
    public Block(Scanner input) {
 
@@ -77,9 +79,6 @@ public class Block {
          System.exit(1);
       }
 
-
-
-
       // get transformation data and build matrices
       double sx = input.nextDouble(), sy = input.nextDouble(), sz = input.nextDouble();
       input.nextLine();
@@ -92,25 +91,18 @@ public class Block {
       double tx = input.nextDouble(), ty = input.nextDouble(), tz = input.nextDouble();
       input.nextLine();
       translate = Mat4.translate(tx, ty, tz);
+            
 
 
    }
 
-   
-   // public sierpinski(Triple scale(int sx, int sy, int sz), Triple translate(tx,ty,tz)) {
-   //    double sx = scale.a, sy = input.nextDouble(), sz = input.nextDouble();
-
-   //    for (int i=0; i<5; i++){
-   //       Mat4 matrix translate.mult(rotate.mult(scale));
-   //    }
-   // }
-   
 
 
    // send the position and color data for all the
    // vertices in all the triangles
    public void sendData(FloatBuffer positionBuffer, FloatBuffer colorBuffer) {
       Mat4 matrix = translate.mult(rotate.mult(scale));
+      
 
       for (int k = 0; k < tris.length; k++) {
          for (int j = 0; j < 3; j++) {
@@ -123,13 +115,13 @@ public class Block {
             } else if (kind.equals("sierpinskiBox"))  {
                Colors.sendData(k + 12, colorBuffer);
             } else if (kind.equals("groundBox")) {
-               Colors.sendData(18, colorBuffer);
+               Colors.sendData(19, colorBuffer);
+            }
          }
       }
    }
       
 
-   }
 
    public int numVerts() {
       return tris.length * 3;
