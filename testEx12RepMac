@@ -1,7 +1,7 @@
 150 150 25       camera location
 230 0 2       azi alt dist
 
-33          number of blocks in the scene
+35          number of blocks in the scene
 
 groundBox   ground box for scene
 50 50 -.001
@@ -168,7 +168,15 @@ pyraBox
 0 1 0 0
 50 50 37.5   
 
+pyraBox   
+6.75 6.75 6.75
+180 1 360 0
+50 50 62.5
 
+pyraBox   
+6.75 6.75 6.75
+0 1 360  0
+50 50 62.5
 
 
 
